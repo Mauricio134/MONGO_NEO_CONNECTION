@@ -11,5 +11,10 @@ if False:
    collection = db.Oscars
    collection.insert_many(data)
 
+result = collection.find({"year_film":1927})
+
+for document in result:
+   print(document)
+
 
 client.close()
