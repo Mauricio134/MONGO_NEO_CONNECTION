@@ -1,7 +1,6 @@
 from pymongo import MongoClient
 import json
 from neo4j import GraphDatabase
-from bson import ObjectId
 
 client = MongoClient("mongodb://localhost:27017/")
 db = client["awards"]
@@ -15,7 +14,7 @@ if False:
         data = json.load(file)
     collection = db.Oscars
     collection.insert_many(data)
-
+    
 result = collection.find({"year_film": 1927})
 
 first_item = True
