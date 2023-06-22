@@ -18,7 +18,6 @@ if False:
 result = collection.find({"year_film": 1927})
 
 first_item = True
-first_node_id = None
 
 for item in result:
     year_film = item["year_film"]
