@@ -16,7 +16,7 @@ if False:
     collection.insert_many(data)
     
 result = collection.find({"year_film": 1927})
-
+result = collection.aggregate([{"$limit": 10}])
 first_item = True
 
 for item in result:
