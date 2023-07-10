@@ -30,15 +30,12 @@ if False:
     collection.insert_many(data)
     #Gloria Swanson
 #result = collection.find({"year_film": 1927})
-#result = collection.aggregate([{"$limit": 10}])
+#result = collection.aggregate([{"$match":{"name": "George Barnes"}},{"$limit": 10}])
 first_item = True
 
 run = True
 
 while run:
-    q = input("INGRESA TU QUERY: ")
-    query = eval(q)
-    result = collection.find(query)
     q = input("INGRESA TU AGGREGATE: ")
     query2 = eval(q)
     result = collection.aggregate(query2)
@@ -104,7 +101,7 @@ while run:
                             winner=winner,
                             display_name=film + ' - ' + name)  # Concatena film y name en display_name
             cypher_query = "MATCH (a:Principal {name: $first_name}), (b:Pelicula {name: $current_name}) MERGE (a)-[:PARTICIPO_TAMBIEN_EN]->(b)"
-            neo4j_session.run(cypher_query, first_name=name, current_name="Louise Dresser")
+            neo4j_session.run(cypher_query, first_name=name, current_name="George Barnes")
         
     a = input("¿DESEAS CONTINUAR? ")
     if a == 'y':
