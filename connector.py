@@ -31,7 +31,6 @@ if False:
     #Gloria Swanson
 #result = collection.find({"year_film": 1927})
 #result = collection.aggregate([{"$match":{"name": "George Barnes"}},{"$limit": 10}])
-first_item = True
 
 run = True
 
@@ -42,17 +41,18 @@ while run:
     os.system('cls' if os.name == 'nt' else 'clear')
     c = choose1()
     os.system('cls' if os.name == 'nt' else 'clear')
+    first_item = True
     if c == 1:
         d = choose2()
-        q = input("INGRESA TU QUERY: ")
-        query3 = eval(q)
         os.system('cls' if os.name == 'nt' else 'clear')
         if d == 1:
+            q = input("INGRESA TU QUERY: ")
+            query3 = eval(q)
+            os.system('cls' if os.name == 'nt' else 'clear')
             collection.delete_one(query3)
         elif d == 2:
             collection.delete_many({})
-        #result = collection.find(query)
-        #result = collection.aggregate(query2)
+        result = collection.aggregate(query2)
     elif c == 2:
         year_film = int(input("INGRESAR LA FECHA DE LA PELICULA: "))
         year_ceremony = int(input("INGRESAR LA FECHA DE LA PREMIACION: "))
@@ -64,8 +64,7 @@ while run:
         os.system('cls' if os.name == 'nt' else 'clear')
         doc = { 'year_film': year_film, 'year_ceremony': year_ceremony, 'ceremony': ceremony, 'category':category, 'name': name, 'film': film, 'winner': winner}
         collection.insert_one(doc)
-        #result = collection.find(query)
-        #result = collection.aggregate(query2)
+        result = collection.aggregate(query2)
     else:
         print("NO HAY CAMBIOS...")
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -78,6 +77,7 @@ while run:
         name = item["name"]
         film = item["film"]
         winner = item["winner"]
+        print(item)
         
         if first_item:
             record = neo4j_session.run("CREATE (p:Principal {year_film: $year_film, year_ceremony: $year_ceremony, ceremony: $ceremony, category: $category, nombre: $nombre, film: $film, winner: $winner, name: $display_name}) RETURN p",
@@ -100,7 +100,7 @@ while run:
                             film=film,
                             winner=winner,
                             display_name=film + ' - ' + name)  # Concatena film y name en display_name
-            cypher_query = "MATCH (a:Principal {name: $first_name}), (b:Pelicula {name: $current_name}) MERGE (a)-[:PARTICIPO_TAMBIEN_EN]->(b)"
+            cypher_query = "MATCH (a:Principal {nombre: $first_name}), (b:Pelicula {nombre: $current_name}) MERGE (a)-[:PARTICIPO_TAMBIEN_EN]->(b)"
             neo4j_session.run(cypher_query, first_name=name, current_name="George Barnes")
         
     a = input("¿DESEAS CONTINUAR? ")
