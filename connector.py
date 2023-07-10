@@ -14,9 +14,7 @@ if False:
         data = json.load(file)
     collection = db.Oscars
     collection.insert_many(data)
-    
-result = collection.find({"year_film": 1927})
-result = collection.aggregate([{"$limit": 10}])
+result = collection.aggregate([{"$match":{"name": "George Barnes"}},{"$limit": 2}])
 first_item = True
 
 for item in result:
@@ -25,8 +23,10 @@ for item in result:
     ceremony = item["ceremony"]
     category = item["category"]
     name = item["name"]
+    nombre = item["name"]
     film = item["film"]
     winner = item["winner"]
+    print(item)
     
     if first_item:
         record = neo4j_session.run("CREATE (p:Principal {year_film: $year_film, year_ceremony: $year_ceremony, ceremony: $ceremony, category: $category, nombre: $nombre, film: $film, winner: $winner, name: $display_name}) RETURN p",
@@ -49,8 +49,8 @@ for item in result:
                           film=film,
                           winner=winner,
                           display_name=film + ' - ' + name)  # Concatena film y name en display_name
-        cypher_query = "MATCH (a:Principal {year_film: $first_year_film}), (b:Pelicula {year_film: $current_year_film}) MERGE (a)-[:SE_ESTRENO_JUNTO_A]->(b)"
-        neo4j_session.run(cypher_query, first_year_film=year_film, current_year_film=1927)
+        cypher_query = "MATCH (a:Principal {nombre: $primer_nombre}), (b:Pelicula {nombre: $current_nombre}) MERGE (a)-[:SE_ESTRENO_JUNTO_A]->(b)"
+        neo4j_session.run(cypher_query, primer_nombre = name, current_nombre="George Barnes")
 
 a = input("¿Deseas continuar? ")
 if a == 'y':
